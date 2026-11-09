@@ -4,8 +4,11 @@
    data script for it, so edit it here only.
 
    From the handover note on RenewaBlox's revised plan for the Paktronic
-   board (27 October 2026), verbatim: do not reword, add or drop
-   items. One item was taken out of scope by decision: never add it back.
+   board (27 October 2026), verbatim except where RenewaBlox has since
+   changed the plan: step 2 and the line on what stays as quoted now have
+   three 250 A rack feeders in place of the quote's two 400 A (November
+   2026). Otherwise do not reword, add or drop items. One item was taken
+   out of scope by decision: never add it back.
    Keep it plain data: it is inlined into a script element, so no closing
    script tag and no HTML comment opener (the app refuses to serve either). */
 const WHAT_WE_NEED = {
@@ -14,8 +17,8 @@ const WHAT_WE_NEED = {
     { lead: 'Remove the mechanical interlock',
       detail: 'Both ACBs normally closed, so engine, site, grid and data centre share one busbar.',
       owner: 'Paktronic' },
-    { lead: 'Add trip gear to the rack MCCBs',
-      detail: 'Undervoltage-release coils, motor operators and status contacts on both 400 A rack MCCBs.',
+    { lead: 'Three 250 A rack feeders, with trip gear',
+      detail: 'Three 250 A rack MCCBs in place of the two 400 A, each with an undervoltage-release coil, a motor operator and status contacts.',
       owner: 'Paktronic' },
     { lead: 'Wire the engine-status trip',
       detail: 'Interposing relay fed by a volt-free "breaker closed" contact on the 2G generator breaker. Contact opens, racks trip.',
@@ -45,7 +48,7 @@ const WHAT_WE_NEED = {
       detail: 'Itemise each change against LF42344, and say whether an 800 A MCCB can replace the data centre ACB.',
       owner: 'Paktronic' },
   ],
-  unchanged: 'Everything else on LF42344 stays as quoted: enclosure, ACBs, MCCBs, surge protection, phase-failure relays, FAT and commissioning.',
+  unchanged: 'Everything else on LF42344 stays as quoted: enclosure, ACBs, the cooler and CDU MCCBs, surge protection, phase-failure relays, FAT and commissioning.',
   confirmTitle: 'We confirm before ordering',
   confirm: [
     'FiT generation meter sits upstream of the data centre tee.',
