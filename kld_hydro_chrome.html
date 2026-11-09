@@ -1,0 +1,221 @@
+<!-- ======================================================================
+  Hydro 3D · atlas chrome
+  Appended to kld_interactive.html at serve time by app_kld_atlas.py, only on
+  the ?view=3d route. kld_interactive.html itself is shared with the two
+  investor-demo apps and must stay untouched, so everything here is an
+  override layered on top: the RenewaBlox design system the atlases share,
+  plus the "Atlas" control that takes the visitor back to the map.
+======================================================================= -->
+<style>
+  :root{
+    --k-brand:#12475e; --k-accent:#1f5f7f; --k-accent-l:#3a89ae; --k-teal:#0f9d77;
+    --k-ink:#0d1b23; --k-ink2:#33454f; --k-muted:#6a7a83; --k-line:#dfe8ed; --k-tint:#f4f8fa;
+    --k-font:"Inter","Inter var",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --k-sh:0 1px 2px rgba(9,26,35,.09), 0 4px 14px rgba(9,26,35,.13);
+  }
+  /* The page's own :root is warm/olive and predates the design system. This
+     block loads after it, so redefining the legacy tokens re-tints everything
+     that reads them — legend chips, card copy, stat rows, panel footers —
+     without touching --rbx-blue, which also drives data marks in the scene. */
+  :root{
+    --ink2:#33454f; --muted:#93a2aa; --grid:#e3e9ec;
+    --rbx-ink:#0d1b23; --rbx-grey:#6a7a83; --rbx-line:#dfe8ed; --rbx-light:#f4f8fa;
+  }
+  body{font-family:var(--k-font) !important;color:var(--k-ink2) !important;
+       font-size:12.5px;line-height:1.5;background:#0d1b23 !important;
+       -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  #stage{background:#0d1b23}
+
+  /* Ten rules in the page use a `font:` shorthand naming 'Segoe UI', which
+     replaces the family outright — so the desk, chart ticks, mode chips and
+     card pin rendered in Segoe while the header and rail rendered in Inter.
+     Override the FAMILY only; a shorthand here would take the sizes with it. */
+  #deskmin,#scenario,#imMode,#nowMode,.card-pin,.rbx-cta,
+  .deskrow button,#revcase button,#chart .tick,#pchart .tick,#chart .ratedtxt{
+    font-family:var(--k-font) !important}
+
+  /* focus, selection and motion, matching the SRV 3D Sim */
+  *:focus{outline:none}
+  *:focus-visible{outline:2px solid var(--k-accent-l);outline-offset:2px;border-radius:5px}
+  ::selection{background:rgba(31,95,127,.22)}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  }
+
+  /* --- header: the gradient keyline the atlases share, in place of the
+         3px rule, and the tighter type scale --- */
+  header{
+    position:relative !important;
+    padding:11px 18px 12px !important;
+    background:linear-gradient(180deg,#fff,#f8fbfc) !important;
+    border-bottom:1px solid var(--k-line) !important;
+    gap:14px !important;
+  }
+  header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2.5px;
+    background:linear-gradient(90deg,var(--k-brand),var(--k-accent-l) 48%,var(--k-teal))}
+  header .logo img{height:21px !important}
+  header .logo span{font-size:10px !important;letter-spacing:.06em;color:var(--k-muted) !important}
+  header .divider{height:30px !important;background:var(--k-line) !important}
+  /* the title column shrinks and ellipses rather than pushing the flow chips
+     onto a second row — the same treatment the SRV 3D Sim header uses */
+  header{flex-wrap:nowrap !important}
+  header .title{flex:0 1 auto;min-width:0}
+  header .title h1,header .title p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  header .title h1{font-size:14.5px !important;font-weight:700 !important;
+    letter-spacing:-.005em !important;color:var(--k-ink) !important}
+  header .title p{font-size:11.5px !important;color:var(--k-muted) !important}
+  header .flow{flex:0 0 auto;margin-left:auto}
+
+  /* the water-to-wire flow chips, in the atlas pill language */
+  header .fchip{
+    background:var(--k-tint) !important;border:1px solid var(--k-line) !important;
+    border-radius:999px !important;padding:4px 12px !important}
+  header .fchip small{color:var(--k-muted) !important;letter-spacing:.05em}
+  /* the scene drives these numbers through .live / .live.amber at runtime —
+     a flat brand colour here would freeze the running and overclock states */
+  header .fchip b{color:#9aa7ad !important;font-variant-numeric:tabular-nums}
+  header .fchip.live b{color:var(--k-teal) !important}
+  header .fchip.live.amber b{color:#d97706 !important}
+  header .farr{color:var(--k-accent-l) !important}
+
+  /* --- panels: glass, 16px radius, layered shadow, as on both atlases --- */
+  .panel{
+    background:rgba(251,253,254,.93) !important;
+    -webkit-backdrop-filter:blur(14px) saturate(1.7) !important;
+    backdrop-filter:blur(14px) saturate(1.7) !important;
+    border:0 !important;border-radius:16px !important;box-shadow:var(--k-sh) !important;
+  }
+  #viewstrip button{
+    font:650 11.5px var(--k-font) !important;color:var(--k-muted) !important;
+    border-radius:9px !important;padding:7px 11px !important;border:0 !important;
+    background:transparent !important;transition:background .14s,color .14s}
+  #viewstrip button:hover{background:var(--k-tint) !important;color:var(--k-brand) !important}
+  #viewstrip button.on{background:#eaf1f5 !important;color:var(--k-brand) !important}
+  @media (max-width:1200px){
+    /* the page hides the camera strip outright here; reflow it instead, the
+       way the SRV sim reflows its view rail */
+    #viewstrip{display:flex !important;left:14px;right:14px;transform:none;
+      width:auto;overflow-x:auto;scrollbar-width:none;justify-content:flex-start}
+    #viewstrip::-webkit-scrollbar{display:none}
+    #viewstrip button{flex:0 0 auto}
+  }
+
+  /* one micro-caps scale across every panel heading, as on the SRV sim */
+  #deskwrap h2,#nowpanel .nphead,#powerwrap .phead,#island h2,#revpanel .rvhead{
+    font-size:9.7px !important;font-weight:750 !important;
+    letter-spacing:.095em !important;color:var(--k-muted) !important}
+  #powerwrap .phead:hover,#island h2:hover{color:var(--k-brand) !important}
+  .deskrow button.on,#revcase button.on{color:var(--k-brand) !important}
+  #deskmin:hover{background:var(--k-accent) !important;color:#fff !important}
+
+  /* the chart tooltip was the one hairline-bordered surface left */
+  #tip{
+    background:rgba(255,255,255,.97) !important;
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:0 !important;border-radius:10px !important;padding:8px 10px !important;
+    font-size:10.8px !important;line-height:1.55 !important;
+    color:var(--k-ink2) !important;box-shadow:var(--k-sh) !important}
+  #tip .dot{border-radius:2.5px !important}
+
+  /* chart furniture in the cool ramp */
+  #chart .tick,#pchart .tick{font-size:10px !important;font-weight:550;fill:#93a2aa !important}
+  #chart .nowline,#pchart .nowline{opacity:.24 !important}
+  .lg{font-size:10.5px !important;font-weight:550}
+  .lg .sw{width:9px !important;height:9px !important}
+
+  /* the model page has no footer of its own; the SRV sim closes on one */
+  footer.kld-foot{
+    flex:0 0 auto;padding:9px 18px;font-size:10.6px;color:var(--k-muted);line-height:1.5;
+    border-top:1px solid var(--k-line);background:linear-gradient(180deg,#fbfdfe,#fff);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer.kld-foot b{color:var(--k-brand);font-weight:700}
+  footer.kld-foot .f2{text-align:right;color:#93a2aa}
+  @media (max-width:900px){footer.kld-foot .f2{display:none}}
+
+  /* --- back to the atlas ---
+     First child of the header, exactly where the SRV 3D Sim puts its own
+     #backatlas control. It cannot live in the stage: every corner there is
+     already occupied by a panel (island top-left, view strip top-centre,
+     now/revenue right, dispatch desk bottom-left). */
+  #kld-back{
+    flex:0 0 auto;order:-1;
+    display:inline-flex;align-items:center;gap:6px;
+    border:1px solid var(--k-line);background:var(--k-tint);color:var(--k-accent);
+    font:650 11.3px var(--k-font);padding:7px 12px 7px 10px;border-radius:999px;
+    cursor:pointer;transition:background .15s,border-color .15s,color .15s;
+  }
+  #kld-back:hover{background:var(--k-accent);border-color:var(--k-accent);color:#fff}
+  #kld-back svg{width:12px;height:12px;display:block}
+  @media (max-width:900px){
+    header{padding:10px 12px !important}
+    header .title p{display:none}
+    #kld-back{padding:6px 10px 6px 8px;font-size:11px}
+    #kld-back span{display:none}
+  }
+</style>
+
+<script>
+// Navigate the whole page from inside Streamlit's component iframe. The frame
+// is sandboxed without allow-top-navigation, so setting parent.location is
+// refused (silently — no exception) in real Chrome. What the sandbox permits:
+// 1) a click on an anchor that belongs to the PARENT document, which the
+// browser attributes to the parent; 2) failing that, rewriting the parent's
+// history entry and reloading it; 3) failing that, a new tab. A successful
+// navigation unloads this document, which cancels the fallback via pagehide.
+function rbxGo(url){
+  var fallback = setTimeout(function(){
+    try { window.parent.history.pushState(null, '', url); window.parent.location.reload(); }
+    catch(e) { window.open(url, '_blank', 'noopener'); }
+  }, 1200);
+  window.addEventListener('pagehide', function(){ clearTimeout(fallback); }, { once: true });
+  try {
+    var pd = window.parent.document;
+    var a = pd.createElement('a');
+    a.href = url; a.target = '_self'; a.style.display = 'none';
+    pd.body.appendChild(a); a.click(); a.remove();
+  } catch(e) {
+    clearTimeout(fallback);
+    try { window.parent.history.pushState(null, '', url); window.parent.location.reload(); }
+    catch(e2) { window.open(url, '_blank', 'noopener'); }
+  }
+}
+(function(){
+  var host = document.querySelector('header') || document.getElementById('stage') || document.body;
+  var b = document.createElement('button');
+  b.id = 'kld-back';
+  b.type = 'button';
+  b.title = 'Back to the KLD Atlas';
+  b.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+                'stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.6L4.6 8 10 13.4"/></svg>' +
+                '<span>Atlas</span>';
+  b.addEventListener('click', function(){
+    var href = '';
+    try { href = window.parent.location.href; } catch(e){}
+    if (!href) href = document.referrer || '';
+    var url = '?';
+    try {
+      var u = new URL(href);
+      u.searchParams.delete('view');
+      u.hash = '';
+      url = u.toString();
+    } catch(e){}
+    rbxGo(url);
+  });
+  host.insertBefore(b, host.firstChild);
+
+  // close the page on the same provenance footer the SRV sim carries
+  if (!document.querySelector('footer.kld-foot')) {
+    var f = document.createElement('footer');
+    f.className = 'kld-foot';
+    f.innerHTML =
+      '<div><b>The mine-first model:</b> the 999 kW run-of-river output is ' +
+      'monetised behind the meter by a co-located, dispatchable compute load ' +
+      'while the 999 kW export connection stays 7.8 km and years away.</div>' +
+      '<div class="f2">Scheme: Adrian Laycock dwgs 2285/9A &amp; 2285/10A · ' +
+      'Flows: SEPA/CEH gauged record · Options &amp; costs: RBX SSEN call, 26/03/26 · ' +
+      '© RenewaBlox · renewablox.com</div>';
+    document.body.appendChild(f);
+  }
+})();
+</script>
