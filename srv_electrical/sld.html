@@ -209,7 +209,7 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
 .gl-item dt .full{font-weight:400;color:var(--muted)}
 .gl-item dd{margin:2px 0 0;color:var(--muted);font-size:14px;text-wrap:pretty}
 .gl-none{margin:12px 0 0;color:var(--muted);font-size:14px}
-[data-tab="lee"] .ours-only{display:none}
+[data-tab="lee"] .ours-only,[data-tab="lee"] [data-k="w-r2"],[data-tab="lee"] [data-k="R2"]{display:none}
 [data-tab="ours"] .lee-only{display:none}
 @media (prefers-reduced-motion: reduce){.flow.on,.sig.fire,.sig.live{animation:none}.wn-toggle svg{transition:none}svg [data-dim]{transition:none}}
 @media (max-width:560px){h1{font-size:22px}.card{padding:14px}
@@ -259,7 +259,7 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
     <p class="swipe">Swipe the diagram sideways to see all of it.</p>
     <figure>
       <div class="scroller">
-        <svg class="sld" id="sld" viewBox="0 0 960 470" role="img" aria-labelledby="figcap">
+        <svg class="sld" id="sld" viewBox="0 0 960 480" role="img" aria-labelledby="figcap">
           <g id="halos" aria-hidden="true"></g>
           <!-- signal paths: ours -->
           <g class="ours-only">
@@ -269,7 +269,7 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
               <text class="t s m" x="680" y="120" text-anchor="middle">breaker closed = healthy</text></g>
             <g data-k="sigwd"><path class="sig" id="sig-wd" d="M870 76 V106"/>
               <text class="t s m" x="878" y="95">watchdog</text></g>
-            <g data-k="sigout"><path class="sig" id="sig-out" d="M870 142 V355 H836"/></g>
+            <g data-k="sigout"><path class="sig" id="sig-out" d="M940 142 V355 H920"/></g>
           </g>
           <!-- interlock: Lee -->
           <g class="lee-only">
@@ -321,18 +321,20 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
           <text data-k="D" class="t s" x="716" y="249">ACB 1250 A</text>
           <text data-k="dcb" class="t b" x="530" y="314" text-anchor="end">Data centre section</text>
           <g data-k="uvr" class="ours-only">
-            <text class="t s" x="774" y="335" text-anchor="middle" style="fill:var(--trip)">UVR</text>
-            <rect class="uvr ours-only" id="uvr" x="714" y="340" width="120" height="30" rx="5"/>
+            <text class="t s" x="772" y="335" text-anchor="middle" style="fill:var(--trip)">UVR</text>
+            <rect class="uvr ours-only" id="uvr" x="714" y="340" width="204" height="30" rx="5"/>
           </g>
           <g data-k="cool"><rect class="load" x="522" y="390" width="76" height="36" rx="4"/>
             <text class="t" x="560" y="405" text-anchor="middle">Dry cooler</text><text class="t s m" x="560" y="419" text-anchor="middle">63 A</text></g>
           <g data-k="cdu"><rect class="load" x="607" y="390" width="76" height="36" rx="4"/>
             <text class="t" x="645" y="405" text-anchor="middle">CDU pump</text><text class="t s m" x="645" y="419" text-anchor="middle">32 A</text></g>
           <g data-k="rack1"><rect class="load" x="692" y="390" width="76" height="36" rx="4"/>
-            <text class="t" x="730" y="405" text-anchor="middle">Rack 1</text><text class="t s m" x="730" y="419" text-anchor="middle">400 A</text></g>
-          <g data-k="rack3"><rect class="load" x="777" y="390" width="76" height="36" rx="4"/>
-            <text class="t" x="815" y="405" text-anchor="middle">Rack 3</text><text class="t s m" x="815" y="419" text-anchor="middle">400 A</text></g>
-          <g data-k="chipdc"><g id="chip-dc" transform="translate(722 438)"><rect class="chipbg" width="100" height="20" rx="10"/><text class="chiptx" x="50" y="14" text-anchor="middle"></text></g></g>
+            <text class="t" x="730" y="405" text-anchor="middle">Rack 1</text><text class="t s m lee-only" x="730" y="419" text-anchor="middle">400 A</text><text class="t s m ours-only" x="730" y="419" text-anchor="middle">250 A</text></g>
+          <g data-k="rack2" class="ours-only"><rect class="load" x="777" y="390" width="76" height="36" rx="4"/>
+            <text class="t" x="815" y="405" text-anchor="middle">Rack 2</text><text class="t s m" x="815" y="419" text-anchor="middle">250 A</text></g>
+          <g data-k="rack3"><rect class="load" x="862" y="390" width="76" height="36" rx="4"/>
+            <text class="t" x="900" y="405" text-anchor="middle">Rack 3</text><text class="t s m lee-only" x="900" y="419" text-anchor="middle">400 A</text><text class="t s m ours-only" x="900" y="419" text-anchor="middle">250 A</text></g>
+          <g data-k="chipdc"><g id="chip-dc" transform="translate(765 438)"><rect class="chipbg" width="100" height="20" rx="10"/><text class="chiptx" x="50" y="14" text-anchor="middle"></text></g></g>
 
           <!-- controller and trip relay: ours -->
           <g class="ours-only">
@@ -437,12 +439,13 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
     coolA:[560,310,560,346], coolB:[560,364,560,390],
     cduA:[645,310,645,346],  cduB:[645,364,645,390],
     r1A:[730,310,730,346],   r1B:[730,364,730,390],
-    r3A:[815,310,815,346],   r3B:[815,364,815,390],
+    r2A:[815,310,815,346],   r2B:[815,364,815,390],
+    r3A:[900,310,900,346],   r3B:[900,364,900,390],
   };
   const FLOWS = { grid:['gridA','gridB'], site:['siteA','siteB'], tie:['tieA','tieB'], chp:['chpA','chpB'], dc:['dcA','dcB'],
-                  cool:['coolA','coolB'], cdu:['cduA','cduB'], r1:['r1A','r1B'], r3:['r3A','r3B'] };
-  const BUS = { exist:[80,330,200], newb:[470,770,200], dcb:[540,840,310] };
-  const BRK = { E:[130,150], T:[400,200], G:[560,130], D:[700,245], S:[200,250], C:[560,355], P:[645,355], R1:[730,355], R3:[815,355] };
+                  cool:['coolA','coolB'], cdu:['cduA','cduB'], r1:['r1A','r1B'], r2:['r2A','r2B'], r3:['r3A','r3B'] };
+  const BUS = { exist:[80,330,200], newb:[470,770,200], dcb:[540,910,310] };
+  const BRK = { E:[130,150], T:[400,200], G:[560,130], D:[700,245], S:[200,250], C:[560,355], P:[645,355], R1:[730,355], R2:[815,355], R3:[900,355] };
 
   /* every part of the diagram carries a data-k name, so a step can light it: wires are
      "w-" and their flow, buses and breakers their own key, the drawn parts their group */
@@ -474,7 +477,7 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
     lee: {
       hash:'lees-design',
       summary:"As quoted (LF42344): the engine's output goes through two 1250 A ACBs that are mechanically interlocked, so it feeds the existing board or the data centre, never both.",
-      note:"<b>Quote LF42344 as drawn.</b> Two 1250 A ACBs set at 1000 A, mechanically interlocked. Cooler and CDU sit behind the data centre ACB. No trip, metering or controller interface.",
+      note:"<b>Quote LF42344 as drawn.</b> Two 1250 A ACBs set at 1000 A, mechanically interlocked. Two 400 A rack feeders, 1#RACK and 3#RACK. Cooler and CDU sit behind the data centre ACB. No trip, metering or controller interface.",
       states:[
         { name:'Export position', caption:'The engine feeds the site loads and exports the rest. The data centre ACB is held open, so nothing mines.',
           brk:{ D:'o' }, buses:{ exist:'engine', newb:'engine', dcb:'' },
@@ -492,19 +495,19 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
     },
     ours: {
       hash:'what-we-need',
-      summary:"Remove the interlock: both ACBs stay closed so engine, site, grid and data centre share one busbar. Turndown happens in software at the miners; a hardwired trip drops the racks if the engine stops.",
+      summary:"Remove the interlock: both ACBs stay closed so engine, site, grid and data centre share one busbar. Turndown happens in software at the miners; a hardwired trip drops the racks if the engine stops. Three 250 A feeders take the racks in place of the quote's two 400 A.",
       note:"The full change list is set out step by step below.",
       states:[
         { name:'Normal running', caption:'Site loads take what they need, the miners take the rest, and a small margin exports. Every breaker stays closed.',
           brk:{}, buses:{ exist:'engine', newb:'engine', dcb:'engine' },
-          flows:{ chp:[1,'engine',1], tie:[.45,'engine',1], grid:[.15,'engine',1], site:[.4,'engine',1], dc:[.85,'engine',1], r1:[.45,'engine',1], r3:[.45,'engine',1], cool:[.15,'engine',1], cdu:[.1,'engine',1] },
+          flows:{ chp:[1,'engine',1], tie:[.45,'engine',1], grid:[.15,'engine',1], site:[.4,'engine',1], dc:[.85,'engine',1], r1:[.45,'engine',1], r2:[.45,'engine',1], r3:[.45,'engine',1], cool:[.15,'engine',1], cdu:[.1,'engine',1] },
           sig:'idle', chips:{ grid:['Export','engine'], chp:['Running','engine'], dc:['Mining','engine'] } },
         { name:'Price above strike', caption:'Power is worth more than mining. Our controller turns the miners down and the surplus exports. No breaker moves.',
           brk:{}, buses:{ exist:'engine', newb:'engine', dcb:'engine' },
-          flows:{ chp:[1,'engine',1], tie:[.9,'engine',1], grid:[.8,'engine',1], site:[.4,'engine',1], dc:[.25,'engine',1], r1:[.1,'engine',1], r3:[.1,'engine',1], cool:[.1,'engine',1], cdu:[.08,'engine',1] },
+          flows:{ chp:[1,'engine',1], tie:[.9,'engine',1], grid:[.8,'engine',1], site:[.4,'engine',1], dc:[.25,'engine',1], r1:[.1,'engine',1], r2:[.1,'engine',1], r3:[.1,'engine',1], cool:[.1,'engine',1], cdu:[.08,'engine',1] },
           sig:'idle', chips:{ grid:['Export','engine'], chp:['Running','engine'], dc:['Turned down','engine'] } },
-        { name:'Engine trips', caption:'The generator breaker opens, the trip relay drops out and both rack MCCBs open in under 0.1 s. Cooling and the site run on the grid until the engine re-syncs.',
-          brk:{ G:'x', R1:'x', R3:'x' }, buses:{ exist:'grid', newb:'grid', dcb:'grid' },
+        { name:'Engine trips', caption:'The generator breaker opens, the trip relay drops out and all three rack MCCBs open in under 0.1 s. Cooling and the site run on the grid until the engine re-syncs.',
+          brk:{ G:'x', R1:'x', R2:'x', R3:'x' }, buses:{ exist:'grid', newb:'grid', dcb:'grid' },
           flows:{ grid:[.5,'grid',-1], site:[.4,'grid',1], tie:[.15,'grid',-1], dc:[.15,'grid',1], cool:[.1,'grid',1], cdu:[.08,'grid',1] },
           sig:'fire', chips:{ grid:['Import','grid'], chp:['Tripped','alarm'], dc:['Racks tripped','alarm'] } },
       ]
@@ -607,8 +610,8 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
     'tie-acb':        { lit:['T','w-tie'],                               at:[400,226] },
     'dc-acb':         { lit:['D','w-dc'],                                at:[678,245] },
     'busbar':         { lit:['exist','newb','dcb'],                      at:[612,186] },
-    'rack-mccbs':     { lit:['R1','R3','w-r1','w-r3','rack1','rack3'],   at:[772,380] },
-    'uvr':            { lit:['uvr','sigout'],                            at:[852,336] },
+    'rack-mccbs':     { lit:['R1','R2','R3','w-r1','w-r2','w-r3','rack1','rack2','rack3'], at:[772,380] },
+    'uvr':            { lit:['uvr','sigout'],                            at:[928,334] },
     'cool-cdu':       { lit:['C','P','w-cool','w-cdu','cool','cdu'],     at:[602,372] },
     'gen-breaker':    { lit:['G','w-chp'],                               at:[534,130] },
     'trip-cable':     { lit:['sigeng'],                                  at:[740,142] },
@@ -652,7 +655,7 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
       <text class="x-note" x="916" y="226" text-anchor="middle">from grid side</text>`,
     'local-remote': `<rect class="x-box" x="876" y="186" width="80" height="22" rx="3"/>
       <text class="x-text" x="916" y="201" text-anchor="middle">Local/remote</text>`,
-    'sld': `<path class="x-frame" d="M292 3 H13 Q3 3 3 13 V457 Q3 467 13 467 H947 Q957 467 957 457 V13 Q957 3 947 3 H560"/>
+    'sld': `<path class="x-frame" d="M292 3 H13 Q3 3 3 13 V467 Q3 477 13 477 H947 Q957 477 957 467 V13 Q957 3 947 3 H560"/>
       <rect class="x-box" x="300" y="410" width="200" height="46" rx="4"/>
       <text class="x-text" x="400" y="429" text-anchor="middle">Single-line diagram</text>
       <text class="x-note" x="400" y="446" text-anchor="middle">as it will be built, for our sign-off</text>`,
@@ -670,9 +673,7 @@ svg [data-dim]{opacity:.2;transition:opacity .25s}
       <text class="x-note" x="862" y="166" text-anchor="end">in the new board's</text>
       <text class="x-note" x="862" y="179" text-anchor="end">marshalling section</text>
       <text class="x-note" x="602" y="444" text-anchor="middle">no UVR: cooling stays on</text>
-      <text class="x-note" x="862" y="400">compute container:</text>
-      <text class="x-note" x="862" y="413">power cables only,</text>
-      <text class="x-note" x="862" y="426">no trip wiring</text>`,
+      <text class="x-note" x="944" y="474" text-anchor="end">to the compute container: power cables only, no trip wiring</text>`,
   };
   /* each step's diagram: the state it is drawn in (one of What we need's operating
      states, or its own), the signals that run, and what else it shows. The parts lit
