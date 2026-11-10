@@ -5,3 +5,7 @@ __pycache__/
 .streamlit/secrets.toml
 .DS_Store
 Thumbs.db
+
+# Eunice: data_source.py marker and partial downloads
+eunice/*.checked
+eunice/*.sqlite.part
