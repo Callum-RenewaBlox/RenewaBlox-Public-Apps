@@ -32,6 +32,7 @@ app. Make changes to the apps here.
 | `app_generator_demo.py` | `generator_demo_home.html` + `peaker_plant_3d.html` + `kld_interactive.html` | Generator Demo — the client pack for generators RenewaBlox is reaching out to, with tem, on its own URL: a landing page that puts the two partners together (through tem and P442, a better PPA for renewables of all types; through RenewaBlox, any excess monetised by compute at the point of generation, drawn as an illustrative week of output split at the export limit), with a PPA check beside the headline (export MPAN and PPA end date, or a PPA statement), then sorts the models by the client's sector, each sector led by the same two steps (a better PPA through tem, then RenewaBlox), with the peaker under **Fuelled Renewables** as the **Peaker Plant model** (`?view=peaker`, prices in **p/kWh**) and the hydro under **Stranded Renewables** as the **Run-of-River Hydro model** (`?view=hydro`). Each model's header carries its client-pack name, the pack bar names the sector and offers a "Talk to us" email link, and nothing is gated — the investor-portal blur is for investors |
 | `app_business_demo.py` | `business_demo_home.html` + `business_site_analysis.html` + `business_haas.html` + `heat_network_3d.html` | Business Electricity — RenewaBlox with tem, the client pack for businesses that buy electricity: a landing page that explains what's in a business bill and who works on which side of the meter (the animated BLOX wordmark marks RenewaBlox's side), sets out tem's supply (RED, priced against tem's UK renewable portfolio through its Rosso platform) and the RED Plus benefit (P442 exempt supply) as the foundation of every tier, then offers three tiers, each including RED and RED Plus and building on the one before: **Tier 1, Holistic Site Analysis** (`?view=site`, an interactive example report on an illustrative site built from tem's example quote — capacity, night-rate timing, power factor, levies and bands, with a running total), **Tier 2, Heat-as-a-Service** (`?view=haas`, an animated isometric site heated by Bitcoin miners through a large dry cooler or as space heaters) and **Tier 3, Heat Network** (`?view=heat`, Heat Network 3D, served with all of its data) |
 | `outreach/app_outreach.py` | none — native Streamlit (`outreach/sections.py`, `outreach/toolkit.py`, `outreach/ui.py`) | Outreach Strategy — RenewaBlox × tem's business outreach strategy (working draft of 2 October 2026) as an app: seven pages under a sticky tab rail, each on its own address (`/`, `/offer`, `/linkedin`, `/strategies`, `/plan`, `/compliance`, `/toolkit`). Overview (the Bill X-ray hook, the five-channel map, the four plays, the first week's moves); Offer & targets (the edge, the claims and whose they are, the three limits, the segments and a **segment playbook** that gathers each segment's buyer, hook, LinkedIn angle, Demand Atlas source and opener on one card); LinkedIn (foundations to paid, with the funnel as a **live model**: its planning rates are sliders, and the paid stop rule follows them); Three strategies (Demand Atlas, Local Power with a generator **sizing calculator**, Borrowed trust); The plan (the 14 weeks on a chart with a **today line and live status** from the viewer's date, `?date=YYYY-MM-DD` to preview another day, and the tasks **filtered by owner**); Compliance (the two decisions, the checklist, the sources and how each was checked); Toolkit (every template and crew prompt, with the common fields **filled once** for all of them, length checks against the strategy's limits, search and a copy button on each) |
+| `eunice/app_eunice.py` | none — native Streamlit (`eunice/config.py`, `db.py`, `octopus.py`, `region_lookup.py`, `scenarios.py`, `staged_flags.py`, `data_source.py`) reading `eunice/data_lite.sqlite` | Eunice — the **E**nergy **U**tilisation, **N**etwork **I**nsight & **C**omparison **E**ngine (eunice.streamlit.app): a 7-day half-hourly UK electricity price forecast by GSP region, domestic and commercial tariffs, with day 1 the live published Octopus rates and days 2–7 the model's predictions with P05–P90 bands, the likely spike and trough slots, a backtest and a solar + battery savings calculator. Moved here from RenewaBlox/Eunice-Platform, which stays the home of the model, the training and the twice-daily refresh; see *Eunice* below |
 
 The two investor demos are separate apps on purpose: NEM 3D was built for one
 group of Australian investors, so it appears only in the pack they are sent to.
@@ -382,3 +383,30 @@ URL behind the portal's button (a button that opens the app in a new tab is the
 best home for a full-screen 3D scene; the pack also works inside a Wix "Embed a
 site" element with `?embed=true&k=…`, because its own links carry the key on and
 do not depend on the cookie). Rotate the code to expire every old link.
+
+## Eunice
+
+`eunice/` is the Eunice price app (`app.py` in RenewaBlox/Eunice-Platform), copied
+here so it can deploy as a public app. Only the runtime came across: the app, the
+modules it imports and the slim database `data_lite.sqlite` (tariffs, predictions,
+weather and grid forecasts, the scorecard). The ingest, the model training and the
+rebuilt engine stay in Eunice-Platform, whose *Daily refresh* workflow rebuilds
+`data_lite.sqlite` at about 09:45 and 16:35 UTC. Make changes to the app here; when
+the app changes in Eunice-Platform, copy it across again (it is `eunice/app_eunice.py`
+here, with the `data_source` call added under the database-path block).
+
+The committed `data_lite.sqlite` is a snapshot of 10 November 2026, so the forecast
+stays current only if the app is given a token: set `EUNICE_DATA_TOKEN` in the app's
+Streamlit secrets to a fine-grained GitHub token with read-only **Contents** access to
+RenewaBlox/Eunice-Platform, and `data_source.py` downloads the latest
+`data_lite.sqlite` from that repository at most every 30 minutes and swaps it in
+(falling back to the database on disk if the download fails). Without the token the
+app serves the snapshot and its own staleness notice says so. Live prices for day 1
+come from the public Octopus API either way.
+
+Deploy it on Streamlit Community Cloud from this repository with main file
+`eunice/app_eunice.py` (Python 3.12). Streamlit reads `eunice/requirements.txt` (the
+runtime packages only, no scikit-learn or LightGBM) and `eunice/.streamlit/config.toml`
+(the light green Eunice theme) beside the entry script. To keep the
+`eunice.streamlit.app` address, delete the old private app first, then claim the
+subdomain for the new one under **Settings → General**.

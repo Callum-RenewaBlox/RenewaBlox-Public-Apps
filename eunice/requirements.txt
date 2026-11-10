@@ -1,0 +1,13 @@
+# Eunice (eunice/app_eunice.py) — runtime only. The model training and daily ingest
+# stay in RenewaBlox/Eunice-Platform; this app only reads data_lite.sqlite.
+requests>=2.31,<3
+python-dotenv>=1.0,<2
+pandas>=2.1,<3
+numpy>=1.26,<3
+streamlit>=1.36,<2
+plotly>=5.18,<7
+
+# Streamlit's gzip middleware breaks on starlette 1.4.0 (GZipResponder gained a required
+# keyword-only argument), so every request fails with "Oh no. Error running app."
+# Remove once Streamlit ships a compatible release.
+starlette<1.4
